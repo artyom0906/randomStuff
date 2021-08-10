@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "randomstuff",
+  "version": "${version}",
+  "name": "RandomStuff",
+  "description": "random stuff",
+  "authors": [
+    "Artyom"
+  ],
+  "contributors": [],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/randomstuff/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.artyom.mod.RandomStuff"
+    ],
+    "client": [
+      "com.artyom.mod.RandomStuffClient",
+      "com.artyom.mod.kavin.init.InventoryTabsClient"
+    ],
+    "server": []
+  },
+  "mixins": [
+    "randomStuff.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.11.6",
+    "fabric": "*"
+  }
+}
