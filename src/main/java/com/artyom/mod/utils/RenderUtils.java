@@ -1,5 +1,6 @@
 package com.artyom.mod.utils;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3d;
@@ -14,14 +15,15 @@ public class RenderUtils {
      * Utility for drawing lines made out of a series of quads in any direction
      * @param matrices  Matrix stack, used to track the current view transformations e.g. translation, rotation
      * @param consumer  Buffer to render the model to
-     * @param facing Direction in which the line should be drawn
-     * @param playerPos Player position
+     * @param tail Direction in which the line should be drawn
+     * @param head Player position
+     * @param entityYaw entity yaw
      * @param w Line width
      * @param l Line length
      * @param colour RGB colour array
      * @param a Colour alpha
      */
-    public static void drawQuadLine(MatrixStack matrices, VertexConsumer consumer, Vec3d facing, Vec3d playerPos, float w, float l, float[] colour, float a) {
+    public static void drawQuadLine(MatrixStack matrices, VertexConsumer consumer, Vec3d tail, Vec3d head, float entityYaw, float headYaw, float w, float l, float[] colour, float a) {
         // Get the transformation matrix and translate to the center
         Matrix4f transMatrix = matrices.peek().getModel();
         matrices.translate(0.5, 0.5, 0.5);
@@ -42,10 +44,17 @@ public class RenderUtils {
 
         //float A = (float) Math.acos(facing.dotProduct(playerPos) / (facing.length() * playerPos.length()));
         //matrices.multiply(Vec3f.POSITIVE_Y.getRadialQuaternion(A));
-        Vec3d player_to_mob = facing.subtract(playerPos);
-        Vec3d XAxis = new Vec3d(0, 0, -1);
-        matrices.multiply(Vec3f.POSITIVE_Y.getRadialQuaternion((float) Math.acos(player_to_mob.dotProduct(XAxis) / (player_to_mob.length() * XAxis.length()))));//yaw
-        //matrices.multiply(Vec3f.POSITIVE_X.getRadialQuaternion(B));//pitch a.b/(|a|*|b|)
+
+        double dx = head.x - tail.x;
+        double dy = head.y - tail.y;
+        double dz = head.z - tail.z;
+
+        double renderSize = Math.sqrt(dx * dx + dy * dy + dz * dz);
+        double angleZ = 360 - (Math.atan2(dz, dx) * 180.0 / Math.PI + 180.0);
+        dx = Math.sqrt(renderSize * renderSize - dy * dy);
+        double angleY = -Math.atan2(dy, dx) * 180 / Math.PI;
+
+        matrices.multiply(Vec3f.NEGATIVE_Y.getDegreesQuaternion((float) angleZ-(180-entityYaw)-90));
 
         // left side
         matrices.translate(-w/2, -w/2, 0);

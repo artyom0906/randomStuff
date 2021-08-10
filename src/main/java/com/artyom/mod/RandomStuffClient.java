@@ -99,7 +99,7 @@ public class RandomStuffClient implements ClientModInitializer {
             armorModel.rightArm.visible = slot == EquipmentSlot.CHEST;
             armorModel.head.visible = slot == EquipmentSlot.HEAD;
             armorModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getSolid()), light, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
-            Vec3d vec3d = Vec3d.ofBottomCenter(MinecraftClient.getInstance().player.getBlockPos());
+            Vec3d vec3d = Vec3d.ofBottomCenter(entity.getBlockPos());
             List<HostileEntity> list = MinecraftClient.getInstance().world.getEntitiesByClass(HostileEntity.class,
                     new Box(vec3d.getX() - 8.0D, vec3d.getY() - 5.0D, vec3d.getZ() - 8.0D, vec3d.getX() + 8.0D, vec3d.getY() + 5.0D, vec3d.getZ() + 8.0D),
                     (hostileEntity) -> {
@@ -107,7 +107,7 @@ public class RandomStuffClient implements ClientModInitializer {
             });
             list.forEach(e->{
                 matrices.push();
-                RenderUtils.drawQuadLine(matrices, vertexConsumers.getBuffer(CustomRenderLayers.QUAD_LINES), e.getPos(), vec3d, 0.05f, (float) e.getPos().subtract(vec3d).length(), new float[]{60f, 68f, 169f}, 1f);
+                RenderUtils.drawQuadLine(matrices, vertexConsumers.getBuffer(CustomRenderLayers.QUAD_LINES), e.getPos(), vec3d, entity.getYaw(), entity.getHeadYaw(), 0.05f, (float) e.getPos().subtract(vec3d).length(), new float[]{60f, 68f, 169f}, 1f);
                 matrices.pop();
             });
         }, RandomStuff.customModeledArmor);
